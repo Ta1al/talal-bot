@@ -39,17 +39,18 @@ class BotClient extends AkairoClient {
         otherwise: config.strings.ArgumentParsingFailure
       }
     });
-    this.commandHandler.useListenerHandler(this.listenerHandler);
     
-
+    
     this.listenerHandler = new ListenerHandler(this, {
       directory: './src/listeners/'
     });
-
+    
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: './src/inhibitors/'
     });
-
+    
+    this.commandHandler.useListenerHandler(this.listenerHandler);
+    this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
@@ -73,6 +74,7 @@ class BotClient extends AkairoClient {
     }, { minimize: false });
 
     this.settings = new MongooseProvider(model('model', schema));
+    this.functions = require('./functions');
   }
 
   async login(token) {
